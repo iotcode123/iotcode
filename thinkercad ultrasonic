@@ -1,0 +1,50 @@
+#include <LiquidCrystal.h>
+#define ECHO 9
+#define TRIGGER 10
+#define TIEMPO_MUESTREO 1000
+#define PULSO_TRIGGER 1
+int DURACION;
+float DISTANCIA;
+float DISTUmb;
+float LED;
+LiquidCrystal lcd(7, 6, 5, 4, 3, 2);
+int num=1;
+
+
+void setup() {
+  // set up the LCD's number of columns and rows:
+  
+  pinMode(TRIGGER, OUTPUT);
+  pinMode(ECHO, INPUT);
+  Serial.begin(9600);
+  lcd.begin(16, 2);
+  lcd.print("DistUmbral:");
+  lcd.setCursor(0,1);
+  lcd.print("DistAprox :");
+}
+
+void loop() {
+  digitalWrite(TRIGGER, HIGH);
+  delay(PULSO_TRIGGER); 
+  digitalWrite(TRIGGER, LOW);
+  //ver el tiempo que tarda en recibir el pulso de respuesta
+  DURACION= pulseIn(ECHO,HIGH);
+  //Distancia en centimetros
+  DISTANCIA = 0.01716*DURACION;
+  //LED=((100-DISTANCIA)/100)*255;
+  DISTUmb = 1.25*DISTANCIA;
+  Serial.println(DISTANCIA);
+ 
+  
+  //tiempo muestreo  
+  lcd.setCursor(11, 0);
+  lcd.print(int(DISTUmb));
+  lcd.setCursor(11, 1);
+  lcd.print(int(DISTANCIA));
+  delay(TIEMPO_MUESTREO); 
+  lcd.setCursor(13,0);
+  lcd.print(" ");
+  lcd.setCursor(13,1);
+  lcd.print(" ");
+  
+}
